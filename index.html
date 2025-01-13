@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+    Servo_Press
+  </title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+
+  <style>
+    
+
+    body {
+      font-family: "Neue Haas Grotesk Display Pro", Helvetica, sans-serif;
+      color: rgba(36, 31, 33, 0.75);
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      background-color: #fff;
+    }
+
+    .header-wrapper {
+      background-color: #241f21;
+      padding: 10px 0;
+    }
+
+    .header {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .header__heading-logo-wrapper img {
+      width: 130px;
+      height: auto;
+    }
+
+    .content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-grow: 1;
+      position: relative;
+      padding: 20px;
+    }
+
+    model-viewer {
+      width: 100%;
+      height: 100%;
+    }
+
+    .ar-button {
+      position: absolute;
+      /* left: 150px; */
+      font-style: inherit;
+      font-size: 16px;
+      font-weight: bold;
+      color: #1c2b6f;
+      text-decoration: none;
+      background: #fff;
+      padding: 5px 10px;
+      border: 2px solid #1c2b6f;
+      border-radius: 10px;
+      z-index: 10;
+      /* transition: background-color 0.3s, transform 0.2s; */
+    }
+
+    .ar-button {
+      right: 20px;
+      top: -50px;
+
+    }
+
+    .ar-button:hover {
+      background: #1c2b6f;
+      color: #fff;
+    }
+
+    /* New styles for speaker and language dropdown */
+    .header-controls {
+      position: absolute;
+      top: 90px;
+      right: 20px;
+      display: flex;
+      align-items: center;
+      z-index: 10;
+    }
+
+    #languageSelect {
+      margin-right: 10px;
+      padding: 5px;
+      font-size: 14px;
+      border-radius: 5px;
+    }
+
+    #voiceOverButton {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 5px;
+    }
+
+    #speakerIcon {
+      width: 25px;
+    }
+
+    @media (max-width: 600px) {
+      #languageSelect {
+        font-size: 12px;
+        padding: 3px;
+      }
+
+      #speakerIcon {
+        width: 20px;
+      }
+    }
+
+    .menu {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      max-width: calc(100% - 40px);
+      gap: 10px;
+      z-index: 10;
+    }
+
+    .swatch-input__label {
+      display: inline-block;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      border: 3px solid #ccc;
+      /* Boundary box style */
+      border-radius: 100%;
+      padding: 3px;
+      /* Add padding to maintain border visibility */
+    }
+
+    .swatch {
+      display: inline-block;
+      border-radius: 100%;
+      /* Makes the swatch circular */
+      border: 0px solid #ccc;
+      /* Adjust the border to suit your design */
+    }
+
+    /* Default size */
+    .swatch-input__label,
+    .swatch {
+      width: 25px;
+      height: 25px;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 1200px) {
+
+      .swatch-input__label,
+      .swatch {
+        width: 25px;
+        height: 25px;
+      }
+    }
+
+    @media (max-width: 992px) {
+
+      .swatch-input__label,
+      .swatch {
+        width: 25px;
+        height: 25px;
+      }
+    }
+
+    @media (max-width: 768px) {
+
+      .swatch-input__label,
+      .swatch {
+        width: 20px;
+        height: 20px;
+      }
+    }
+
+    @media (max-width: 576px) {
+
+      .swatch-input__label,
+      .swatch {
+        width: 20px;
+        height: 20px;
+      }
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      padding: 0;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
+    }
+
+    fieldset {
+      border: none;
+      /* Remove default border */
+      padding: 0;
+    }
+
+    legend {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .swatch-input__label.selected {
+      border: 5px solid #000;
+      /* Example of a selected state style */
+    }
+
+    /*Dimensionline*/
+    #controls {
+      position: absolute;
+      bottom: 16px;
+      left: 16px;
+      max-width: unset;
+      transform: unset;
+      pointer-events: auto;
+      z-index: 100;
+    }
+
+    .dot {
+      display: none;
+    }
+
+    .dim {
+      background: #fff;
+      border-radius: 4px;
+      border: none;
+      box-sizing: border-box;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+      color: rgba(0, 0, 0, 0.8);
+      display: block;
+      font-family: Futura, Helvetica Neue, sans-serif;
+      font-size: 1em;
+      font-weight: 700;
+      max-width: 128px;
+      overflow-wrap: break-word;
+      padding: 0.5em 1em;
+      position: absolute;
+      width: max-content;
+      height: max-content;
+      transform: translate3d(-50%, -50%, 0);
+      pointer-events: none;
+      --min-hotspot-opacity: 0;
+    }
+
+    @media only screen and (max-width: 800px) {
+      .dim {
+        font-size: 3vw;
+      }
+    }
+
+    .dimensionLineContainer {
+      pointer-events: none;
+      display: block;
+    }
+
+    .dimensionLine {
+      stroke: #16a5e6;
+      stroke-width: 2;
+      stroke-dasharray: 2;
+    }
+
+    .hide {
+      display: none;
+    }
+
+    /* Annotation */
+    .hotspot {
+      display: block;
+      width: 10px;
+      height: 10px;
+      border-radius: 5px;
+      border: none;
+      background-color: rgb(0, 0, 0);
+      box-sizing: border-box;
+      pointer-events: none;
+
+    }
+
+    .hotspot[slot="hotspot-hand"] {
+      --min-hotspot-opacity: 0;
+      background-color: rgb(0, 0, 0);
+    }
+
+    .hotspot.hide {
+      display: none;
+    }
+
+
+
+    .annotation {
+      background-color: #0a0a0a00;
+      position: absolute;
+      transform: translate(-20px, -80px);
+      border-radius: 10px;
+      padding: 10px;
+      /* font-family: "Neue Haas Grotesk Display Pro", Helvetica, sans-serif; */
+      font-family: Futura, Helvetica Neue, sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: #000000;
+      /* Make the text color contrast well with the background */
+      line-height: 1.5;
+      /* Space out the text for better readability */
+      text-align: left;
+      /* Align text to the left for a traditional reading flow */
+      white-space: nowrap;
+      /* Ensure text respects line breaks */
+    }
+
+    .annotation div {
+      margin-bottom: 5px;
+      /* Space out rows of text */
+    }
+
+    .annotation:last-child {
+      margin-bottom: 0;
+      /* Remove the margin from the last row */
+    }
+
+
+    /* This keeps child nodes hidden while the element loads */
+    :not(:defined)>* {
+      display: none;
+    }
+  </style>
+
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
+</head>
+
+<body>
+  <div class="header-wrapper">
+    <header class="header">
+      <a class="header__heading-link">
+        <div class="header__heading-logo-wrapper">
+          <img src="//shop.strong-hold.com/cdn/shop/files/strong-hold-logo.svg?v=1705508448&amp;width=600"
+            alt="Strong Hold" />
+        </div>
+      </a>
+    </header>
+  </div>
+
+  <div class="content">
+    
+
+    <model-viewer id="modelViewer" autoplay ar ar-modes="webxr" scale="2.54 2.54 2.54" ar-scale="fixed"
+      camera-orbit="-30deg auto auto" max-camera-orbit="auto 100deg auto" shadow-intensity="1" camera-controls
+      touch-action="pan-y"
+      src="https://raw.githubusercontent.com/Arul11111990/strong_h/main/assets/cart/StrandHold_ani_comp.glb"
+      alt="A 3D model of a tool cart">
+
+
+      <!-- Annotation -->
+      <button class="hotspot" slot="hotspot-hand" data-position="0 1.05 0" >
+        <div class="annotation">Material: 12-Gauge Steel<br>
+          Weight: 592.0 lb<br>
+        </div>
+      
+
+
+      <!--  Dimension Line -->
+      <button slot="hotspot-dot+X-Y+Z" class="dot" data-position="1 -1 1" data-normal="1 0 0"></button>
+      <button slot="hotspot-dim+X-Y" class="dim" data-position="1 -1 0" data-normal="1 0 0"></button>
+      <button slot="hotspot-dot+X-Y-Z" class="dot" data-position="1 -1 -1" data-normal="1 0 0"></button>
+      <button slot="hotspot-dim+X-Z" class="dim" data-position="1 0 -1" data-normal="1 0 0"></button>
+      <button slot="hotspot-dot+X+Y-Z" class="dot" data-position="1 1 -1" data-normal="0 1 0"></button>
+      <button slot="hotspot-dim+Y-Z" class="dim" data-position="0 -1 -1" data-normal="0 1 0"></button>
+      <button slot="hotspot-dot-X+Y-Z" class="dot" data-position="-1 1 -1" data-normal="0 1 0"></button>
+      <button slot="hotspot-dim-X-Z" class="dim" data-position="-1 0 -1" data-normal="-1 0 0"></button>
+      <button slot="hotspot-dot-X-Y-Z" class="dot" data-position="-1 -1 -1" data-normal="-1 0 0"></button>
+      <button slot="hotspot-dim-X-Y" class="dim" data-position="-1 -1 0" data-normal="-1 0 0"></button>
+      <button slot="hotspot-dot-X-Y+Z" class="dot" data-position="-1 -1 1" data-normal="-1 0 0"></button>
+      <svg id="dimLines" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" class="dimensionLineContainer">
+        <line class="dimensionLine"></line>
+        <line class="dimensionLine"></line>
+        <line class="dimensionLine"></line>
+        <line class="dimensionLine"></line>
+        <line class="dimensionLine"></line>
+      </svg>
+
+      <div id="controls" class="dim">
+
+        <label for="show-dimensions">Show Dimensions:</label>
+        <input id="show-dimensions" type="checkbox" checked="true">
+      </div>
+
+    </model-viewer>
+
+    <button class="ar-button" id="arButton">AR View</button>
+  </div>
+
+  
+
+  <script>
+    const modelViewer = document.getElementById("modelViewer");
+    const arButton = document.getElementById("arButton");
+
+    // Function to load a model into the model viewer
+    function loadModel(src) {
+      modelViewer.src = src;
+    }
+
+    // Dim Line
+    const checkbox = modelViewer.querySelector('#show-dimensions');
+
+    const dimElements = [...modelViewer.querySelectorAll('button'), modelViewer.querySelector('#dimLines'), modelViewer.querySelector('.annotation'), document.querySelectorAll('.hotspot')];
+
+    function setVisibility(visible) {
+      dimElements.forEach((element) => {
+        if (visible) {
+          element.classList.remove('hide');
+        } else {
+          element.classList.add('hide');
+        }
+      });
+    }
+
+    checkbox.addEventListener('change', () => {
+      setVisibility(checkbox.checked);
+    });
+
+    modelViewer.addEventListener('ar-status', (event) => {
+      setVisibility(checkbox.checked && event.detail.status !== 'session-started');
+    });
+
+    // update svg
+    function drawLine(svgLine, dotHotspot1, dotHotspot2, dimensionHotspot) {
+      if (dotHotspot1 && dotHotspot2) {
+        svgLine.setAttribute('x1', dotHotspot1.canvasPosition.x);
+        svgLine.setAttribute('y1', dotHotspot1.canvasPosition.y);
+        svgLine.setAttribute('x2', dotHotspot2.canvasPosition.x);
+        svgLine.setAttribute('y2', dotHotspot2.canvasPosition.y);
+
+        // use provided optional hotspot to tie visibility of this svg line to
+        if (dimensionHotspot && !dimensionHotspot.facingCamera) {
+          svgLine.classList.add('hide');
+        }
+        else {
+          svgLine.classList.remove('hide');
+        }
+      }
+    }
+
+    const dimLines = modelViewer.querySelectorAll('line');
+
+    const renderSVG = () => {
+      drawLine(dimLines[0], modelViewer.queryHotspot('hotspot-dot+X-Y+Z'), modelViewer.queryHotspot('hotspot-dot+X-Y-Z'), modelViewer.queryHotspot('hotspot-dim+X-Y'));
+      drawLine(dimLines[1], modelViewer.queryHotspot('hotspot-dot+X-Y-Z'), modelViewer.queryHotspot('hotspot-dot+X+Y-Z'), modelViewer.queryHotspot('hotspot-dim+X-Z'));
+      drawLine(dimLines[2], modelViewer.queryHotspot('hotspot-dot+X+Y-Z'), modelViewer.queryHotspot('hotspot-dot-X+Y-Z')); // always visible
+      drawLine(dimLines[3], modelViewer.queryHotspot('hotspot-dot-X+Y-Z'), modelViewer.queryHotspot('hotspot-dot-X-Y-Z'), modelViewer.queryHotspot('hotspot-dim-X-Z'));
+      drawLine(dimLines[4], modelViewer.queryHotspot('hotspot-dot-X-Y-Z'), modelViewer.queryHotspot('hotspot-dot-X-Y+Z'), modelViewer.queryHotspot('hotspot-dim-X-Y'));
+    };
+
+    modelViewer.addEventListener('load', () => {
+      const center = modelViewer.getBoundingBoxCenter();
+      const size = modelViewer.getDimensions();
+      const x2 = size.x / 2;
+      const y2 = size.y / 2;
+      const z2 = size.z / 2;
+
+      modelViewer.updateHotspot({
+        name: 'hotspot-dot+X-Y+Z',
+        position: `${center.x + x2} ${center.y - y2} ${center.z + z2}`
+      });
+
+      modelViewer.updateHotspot({
+        name: 'hotspot-dim+X-Y',
+        position: `${center.x + x2 * 1.2} ${center.y - y2 * 1.1} ${center.z}`
+      });
+      modelViewer.querySelector('button[slot="hotspot-dim+X-Y"]').textContent =
+        `${(size.z * 100 / 2.54).toFixed(0)} in`;
+
+      modelViewer.updateHotspot({
+        name: 'hotspot-dot+X-Y-Z',
+        position: `${center.x + x2} ${center.y - y2} ${center.z - z2}`
+      });
+
+      modelViewer.updateHotspot({
+        name: 'hotspot-dim+X-Z',
+        position: `${center.x + x2 * 1.2} ${center.y} ${center.z - z2 * 1.2}`
+      });
+      modelViewer.querySelector('button[slot="hotspot-dim+X-Z"]').textContent =
+        `${(size.y * 100 / 2.54).toFixed(0)} in`;
+
+      modelViewer.updateHotspot({
+        name: 'hotspot-dot+X+Y-Z',
+        position: `${center.x + x2} ${center.y + y2} ${center.z - z2}`
+      });
+
+      modelViewer.updateHotspot({
+        name: 'hotspot-dim+Y-Z',
+        position: `${center.x} ${center.y + y2 * 1.1} ${center.z - z2 * 1.1}`
+      });
+      modelViewer.querySelector('button[slot="hotspot-dim+Y-Z"]').textContent =
+        `${(size.x * 100 / 2.54).toFixed(0)} in`;
+
+      modelViewer.updateHotspot({
+        name: 'hotspot-dot-X+Y-Z',
+        position: `${center.x - x2} ${center.y + y2} ${center.z - z2}`
+      });
+
+      modelViewer.updateHotspot({
+        name: 'hotspot-dim-X-Z',
+        position: `${center.x - x2 * 1.2} ${center.y} ${center.z - z2 * 1.2}`
+      });
+      modelViewer.querySelector('button[slot="hotspot-dim-X-Z"]').textContent =
+        `${(size.y * 100 / 2.54).toFixed(0)} in`;
+
+      modelViewer.updateHotspot({
+        name: 'hotspot-dot-X-Y-Z',
+        position: `${center.x - x2} ${center.y - y2} ${center.z - z2}`
+      });
+
+      modelViewer.updateHotspot({
+        name: 'hotspot-dim-X-Y',
+        position: `${center.x - x2 * 1.2} ${center.y - y2 * 1.1} ${center.z}`
+      });
+      modelViewer.querySelector('button[slot="hotspot-dim-X-Y"]').textContent =
+        `${(size.z * 100 / 2.54).toFixed(0)} in`;
+
+      modelViewer.updateHotspot({
+        name: 'hotspot-dot-X-Y+Z',
+        position: `${center.x - x2} ${center.y - y2} ${center.z + z2}`
+      });
+
+      modelViewer.addEventListener('load', renderSVG);
+      modelViewer.addEventListener('camera-change', renderSVG);
+    });
+
+
+    // AR button click event listener
+    arButton.addEventListener("click", () => {
+      if (modelViewer.canActivateAR) {
+        modelViewer.activateAR();
+      } else {
+        alert("AR is not supported on this device.");
+      }
+    });
+
+    // Event listener for AR session start
+    modelViewer.addEventListener("ar-status", (event) => {
+      if (event.detail.status === "session-started") {
+        // Example: Set minimum position and scale in AR session
+        const minPosition = { x: 0, y: -4, z: 3 };
+        const scale = { x: 1, y: 1, z: 1 };
+
+        modelViewer.scale = scale;
+        modelViewer.position = minPosition;
+      }
+    });
+
+    // Event listener for AR session end
+    modelViewer.addEventListener("ar-status", (event) => {
+      if (event.detail.status === "not-presenting") {
+        // Reset position and scale to default values
+        modelViewer.scale = { x: 1, y: 1, z: 1 };
+        modelViewer.position = { x: 0, y: 0, z: 0 };
+      }
+    });
+  </script>
+       <!-- Language and Voice Over Dropdown and Button -->
+  </div>
+  <div class="header-controls">
+    <select id="languageSelect" style="margin-right: 10px;">
+      <option value="en-US">English</option>
+      <option value="ta-IN">Tamil</option>
+      <option value="es-ES">Spanish</option>
+      <option value="fr-FR">French</option>
+      <option value="de-DE">German</option>
+    </select>
+    <button id="voiceOverButton" style="background: none; border: none; cursor: pointer;">
+      <img id="speakerIcon"
+        src="https://raw.githubusercontent.com/Arul11111990/strong_h/main/assets/img/speaker_off.png" alt="Speaker Off"
+        width="30">
+    </button>
+  </div>
+
+
+  <script>
+    let isPlaying = false;
+    let utterance = null;
+    let voices = [];
+
+    const translations = {
+      'en-US': 'Introducing a rugged and reliable product, crafted with 12-gauge, all-welded body construction and a durable 7-gauge steel top. This unit comes equipped with six half-width drawers, each capable of supporting up to 400 pounds, along with a sturdy shelf that can hold up to 600 pounds. For easy mobility, it\'s fitted with 6-inch heavy-duty casters. Shipped fully assembled from Louisville, Kentucky, and backed by a 99-year warranty, this product is built to last.',
+      'ta-IN': 'இந்த பொருள் மிகவும் வலிமையானது மற்றும் நம்பகமானது. 12-கேஜ் முழுமையாக வெல்ட் செய்யப்பட்ட உடல் கட்டமைப்புடன், மற்றும் 7-கேஜ் ஸ்டீல் மேல் பகுதியுடன் தயாரிக்கப்பட்டது. இதில், ஒவ்வொரு தலா 400 பவுண்டுகள் வரை தாங்கக்கூடிய ஆறு அரை-அகலத்திலான டிராயர்களும், 600 பவுண்டுகள் வரை தாங்கக்கூடிய ஒரு வலிமையான தட்டையும் உள்ளன. எளிதாக நகர்வதற்காக 6 அங்குல கனரக சக்கரங்களுடன் பொருத்தப்பட்டுள்ளது. முழுமையாக ஒருங்கிணைக்கப்பட்டு, லூயிவில்லே, கென்டகியில் இருந்து அனுப்பப்படுகிறது. 99 ஆண்டுகளுக்கான உத்தரவாதத்துடன் வழங்கப்படுகிறது, இது நீண்டநாட்களுக்காக உருவாக்கப்பட்டுள்ளது.',
+      'es-ES': 'Presentando un producto resistente y confiable, fabricado con una construcción de cuerpo completamente soldado de calibre 12 y una tapa de acero de calibre 7. Esta unidad viene equipada con seis cajones de media anchura, cada uno capaz de soportar hasta 400 libras, junto con un estante resistente que puede soportar hasta 600 libras. Para una movilidad fácil, está equipada con ruedas resistentes de 6 pulgadas. Se envía completamente ensamblada desde Louisville, Kentucky, y tiene una garantía de 99 años, este producto está hecho para durar.',
+      'fr-FR': 'Présentation d\'un produit robuste et fiable, conçu avec une construction de corps entièrement soudée de calibre 12 et un dessus en acier de calibre 7. Cette unité est équipée de six tiroirs de demi-largeur, chacun capable de supporter jusqu\'à 400 livres, ainsi que d\'une étagère robuste pouvant supporter jusqu\'à 600 livres. Pour une mobilité facile, elle est équipée de roulettes robustes de 6 pouces. Expédié entièrement assemblé de Louisville, Kentucky, et assorti d\'une garantie de 99 ans, ce produit est conçu pour durer.',
+      'de-DE': 'Ein robustes und zuverlässiges Produkt, gefertigt aus einer vollständig geschweißten Karosserie aus 12-Gauge-Stahl und einer 7-Gauge-Stahloberseite. Diese Einheit ist mit sechs halbbreiten Schubladen ausgestattet, die jeweils bis zu 400 Pfund tragen können, sowie mit einem stabilen Regal, das bis zu 600 Pfund tragen kann. Für eine einfache Mobilität ist es mit 6-Zoll-Schwerlasträdern ausgestattet. Es wird vollständig montiert von Louisville, Kentucky, geliefert und hat eine Garantie von 99 Jahren. Dieses Produkt ist für Langlebigkeit gebaut.'
+    };
+
+    const voiceMappings = {
+      'en-US': 'Microsoft Zira - English (United States)',
+/*       'ta-IN': 'Microsoft Pallavi Online (Natural) - Tamil (India)',
+ */      'ta-IN':'Microsoft Valluvar Online (Natural) - Tamil (India)',
+      'es-ES': 'Microsoft Helena - Spanish (Spain)',
+      'fr-FR': 'Microsoft Hortense - French (France)',
+      'de-DE': 'Microsoft Hedda - German (Germany)'
+    };
+
+    // Function to populate the voice list
+    function populateVoiceList() {
+      voices = window.speechSynthesis.getVoices();
+    }
+
+    // Preload voices when page loads
+    function preloadVoices() {
+      if (speechSynthesis.onvoiceschanged !== undefined) {
+        speechSynthesis.onvoiceschanged = populateVoiceList;
+      }
+    }
+
+    // Function to get the translated text based on the selected language
+    function getTranslatedText() {
+      const selectedLanguage = document.getElementById('languageSelect').value;
+      return translations[selectedLanguage] || translations['en-US'];
+    }
+
+    // Function to get the correct voice based on the selected language
+    function getVoice() {
+      const selectedLanguage = document.getElementById('languageSelect').value;
+      const desiredVoiceName = voiceMappings[selectedLanguage];
+      return voices.find(voice => voice.name === desiredVoiceName);
+    }
+
+    function toggleVoiceOver() {
+      const speakerIcon = document.getElementById('speakerIcon');
+
+      if (!isPlaying) {
+        startVoiceOver(speakerIcon);
+      } else {
+        stopVoiceOver(speakerIcon);
+      }
+    }
+
+    function startVoiceOver(speakerIcon) {
+      const voiceOverText = getTranslatedText();
+      const selectedVoice = getVoice();
+
+      utterance = new SpeechSynthesisUtterance(voiceOverText);
+
+      // Optional: Set properties like pitch, rate, and volume
+      utterance.pitch = 1;
+      utterance.rate = 1;
+      utterance.volume = 1;
+
+      // Assign the selected voice
+      if (selectedVoice) {
+        utterance.voice = selectedVoice;
+      }
+
+      // When the speech starts, change the icon to 'speaker-on'
+      utterance.onstart = () => {
+        isPlaying = true;
+        speakerIcon.src = 'https://raw.githubusercontent.com/Arul11111990/strong_h/main/assets/img/speaker_on.png';
+        speakerIcon.alt = 'Speaker On';
+      };
+
+      // When the speech ends, change the icon back to 'speaker-off'
+      utterance.onend = () => {
+        isPlaying = false;
+        speakerIcon.src = 'https://raw.githubusercontent.com/Arul11111990/strong_h/main/assets/img/speaker_off.png';
+        speakerIcon.alt = 'Speaker Off';
+      };
+
+      // Speak the text
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function stopVoiceOver(speakerIcon) {
+      window.speechSynthesis.cancel();
+      isPlaying = false;
+      speakerIcon.src = 'https://raw.githubusercontent.com/Arul11111990/strong_h/main/assets/img/speaker_off.png';
+      speakerIcon.alt = 'Speaker Off';
+    }
+
+    // Change voice dynamically when the dropdown changes
+    document.getElementById('languageSelect').addEventListener('change', function () {
+      if (isPlaying) {
+        // Stop current speech and start again with new language
+        stopVoiceOver(document.getElementById('speakerIcon'));
+        startVoiceOver(document.getElementById('speakerIcon'));
+      }
+    });
+
+    // Add event listener to the button
+    document.getElementById('voiceOverButton').addEventListener('click', toggleVoiceOver);
+
+    // Preload voices when page loads
+    window.addEventListener('load', preloadVoices);
+  </script>
+
+</body>
+
+</html>
