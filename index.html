@@ -355,7 +355,7 @@
   <div class="content">
     
 
-    <model-viewer id="modelViewer" autoplay ar ar-modes="webxr" scale="2.54 2.54 2.54" ar-scale="fixed"
+    <model-viewer id="modelViewer" autoplay ar ar-modes="webxr" scale="1 1 1" ar-scale="fixed"
       camera-orbit="-30deg auto auto" max-camera-orbit="auto 100deg auto" shadow-intensity="1" camera-controls
       touch-action="pan-y"
       src="https://raw.githubusercontent.com/Arul11111990/servo/6c3e342772612355c320df85225236b8096211ac/servo_press1.glb"
@@ -363,10 +363,10 @@
 
 
       <!-- Annotation -->
-      <button class="hotspot" slot="hotspot-hand" data-position="0 1.05 0" >
+   <!--    <button class="hotspot" slot="hotspot-hand" data-position="0 1.05 0" >
         <div class="annotation">Material: 12-Gauge Steel<br>
           Weight: 592.0 lb<br>
-        </div>
+        </div> -->
       
 
 
@@ -480,7 +480,7 @@
         position: `${center.x + x2 * 1.2} ${center.y - y2 * 1.1} ${center.z}`
       });
       modelViewer.querySelector('button[slot="hotspot-dim+X-Y"]').textContent =
-        `${(size.z * 100 / 2.54).toFixed(0)} in`;
+        `${(size.z * 100 ).toFixed(0)} mm`;
 
       modelViewer.updateHotspot({
         name: 'hotspot-dot+X-Y-Z',
@@ -492,7 +492,7 @@
         position: `${center.x + x2 * 1.2} ${center.y} ${center.z - z2 * 1.2}`
       });
       modelViewer.querySelector('button[slot="hotspot-dim+X-Z"]').textContent =
-        `${(size.y * 100 / 2.54).toFixed(0)} in`;
+        `${(size.y * 100 ).toFixed(0)} mm`;
 
       modelViewer.updateHotspot({
         name: 'hotspot-dot+X+Y-Z',
@@ -504,7 +504,7 @@
         position: `${center.x} ${center.y + y2 * 1.1} ${center.z - z2 * 1.1}`
       });
       modelViewer.querySelector('button[slot="hotspot-dim+Y-Z"]').textContent =
-        `${(size.x * 100 / 2.54).toFixed(0)} in`;
+        `${(size.x * 100 ).toFixed(0)} mm`;
 
       modelViewer.updateHotspot({
         name: 'hotspot-dot-X+Y-Z',
@@ -516,7 +516,7 @@
         position: `${center.x - x2 * 1.2} ${center.y} ${center.z - z2 * 1.2}`
       });
       modelViewer.querySelector('button[slot="hotspot-dim-X-Z"]').textContent =
-        `${(size.y * 100 / 2.54).toFixed(0)} in`;
+        `${(size.y * 100 ).toFixed(0)} mm`;
 
       modelViewer.updateHotspot({
         name: 'hotspot-dot-X-Y-Z',
@@ -528,7 +528,7 @@
         position: `${center.x - x2 * 1.2} ${center.y - y2 * 1.1} ${center.z}`
       });
       modelViewer.querySelector('button[slot="hotspot-dim-X-Y"]').textContent =
-        `${(size.z * 100 / 2.54).toFixed(0)} in`;
+        `${(size.z * 100 ).toFixed(0)} mm`;
 
       modelViewer.updateHotspot({
         name: 'hotspot-dot-X-Y+Z',
@@ -575,14 +575,14 @@
   <div class="header-controls">
     <select id="languageSelect" style="margin-right: 10px;">
       <option value="en-US">English</option>
-      <option value="ta-IN">Tamil</option>
+      <option value="ta-IN">Hindi</option>
       <option value="es-ES">Spanish</option>
       <option value="fr-FR">French</option>
       <option value="de-DE">German</option>
     </select>
     <button id="voiceOverButton" style="background: none; border: none; cursor: pointer;">
       <img id="speakerIcon"
-        src="https://raw.githubusercontent.com/Arul11111990/strong_h/main/assets/img/speaker_off.png" alt="Speaker Off"
+        src="https://raw.githubusercontent.com/Arul11111990/servo/6cb3fe9a3f0c986676fa2423caae07f344a82588/speaker_off.png" alt="Speaker Off"
         width="30">
     </button>
   </div>
@@ -594,17 +594,16 @@
     let voices = [];
 
     const translations = {
-      'en-US': 'Introducing a rugged and reliable product, crafted with 12-gauge, all-welded body construction and a durable 7-gauge steel top. This unit comes equipped with six half-width drawers, each capable of supporting up to 400 pounds, along with a sturdy shelf that can hold up to 600 pounds. For easy mobility, it\'s fitted with 6-inch heavy-duty casters. Shipped fully assembled from Louisville, Kentucky, and backed by a 99-year warranty, this product is built to last.',
-      'ta-IN': 'இந்த பொருள் மிகவும் வலிமையானது மற்றும் நம்பகமானது. 12-கேஜ் முழுமையாக வெல்ட் செய்யப்பட்ட உடல் கட்டமைப்புடன், மற்றும் 7-கேஜ் ஸ்டீல் மேல் பகுதியுடன் தயாரிக்கப்பட்டது. இதில், ஒவ்வொரு தலா 400 பவுண்டுகள் வரை தாங்கக்கூடிய ஆறு அரை-அகலத்திலான டிராயர்களும், 600 பவுண்டுகள் வரை தாங்கக்கூடிய ஒரு வலிமையான தட்டையும் உள்ளன. எளிதாக நகர்வதற்காக 6 அங்குல கனரக சக்கரங்களுடன் பொருத்தப்பட்டுள்ளது. முழுமையாக ஒருங்கிணைக்கப்பட்டு, லூயிவில்லே, கென்டகியில் இருந்து அனுப்பப்படுகிறது. 99 ஆண்டுகளுக்கான உத்தரவாதத்துடன் வழங்கப்படுகிறது, இது நீண்டநாட்களுக்காக உருவாக்கப்பட்டுள்ளது.',
-      'es-ES': 'Presentando un producto resistente y confiable, fabricado con una construcción de cuerpo completamente soldado de calibre 12 y una tapa de acero de calibre 7. Esta unidad viene equipada con seis cajones de media anchura, cada uno capaz de soportar hasta 400 libras, junto con un estante resistente que puede soportar hasta 600 libras. Para una movilidad fácil, está equipada con ruedas resistentes de 6 pulgadas. Se envía completamente ensamblada desde Louisville, Kentucky, y tiene una garantía de 99 años, este producto está hecho para durar.',
-      'fr-FR': 'Présentation d\'un produit robuste et fiable, conçu avec une construction de corps entièrement soudée de calibre 12 et un dessus en acier de calibre 7. Cette unité est équipée de six tiroirs de demi-largeur, chacun capable de supporter jusqu\'à 400 livres, ainsi que d\'une étagère robuste pouvant supporter jusqu\'à 600 livres. Pour une mobilité facile, elle est équipée de roulettes robustes de 6 pouces. Expédié entièrement assemblé de Louisville, Kentucky, et assorti d\'une garantie de 99 ans, ce produit est conçu pour durer.',
-      'de-DE': 'Ein robustes und zuverlässiges Produkt, gefertigt aus einer vollständig geschweißten Karosserie aus 12-Gauge-Stahl und einer 7-Gauge-Stahloberseite. Diese Einheit ist mit sechs halbbreiten Schubladen ausgestattet, die jeweils bis zu 400 Pfund tragen können, sowie mit einem stabilen Regal, das bis zu 600 Pfund tragen kann. Für eine einfache Mobilität ist es mit 6-Zoll-Schwerlasträdern ausgestattet. Es wird vollständig montiert von Louisville, Kentucky, geliefert und hat eine Garantie von 99 Jahren. Dieses Produkt ist für Langlebigkeit gebaut.'
+      'en-US': 'Introducing the revolutionary Servo Press – engineered for precision, power, and unparalleled efficiency! With advanced servo motor technology, it delivers superior accuracy to the micron level, real-time control for fully customizable press profiles, and consumes up to 50% less energy than traditional hydraulic presses. Designed for industries like automotive, electronics, and medical devices, the Servo Press ensures consistent quality and maximum productivity. Backed by state-of-the-art diagnostics, a user-friendly interface, and built-in safety features, it’s the perfect solution to redefine your production standards. Upgrade to the future of manufacturing today—experience precision, experience Servo Press. Contact us now for a demo and elevate your production line!',
+      'hi-IN': 'पेश है क्रांतिकारी सर्वो प्रेस – सटीकता, शक्ति और बेजोड़ दक्षता का प्रतीक! उन्नत सर्वो मोटर तकनीक के साथ, यह माइक्रोन स्तर तक उच्चतम सटीकता, पूरी तरह से कस्टमाइज़ेबल प्रेस प्रोफाइल के लिए रियल-टाइम नियंत्रण और पारंपरिक हाइड्रॉलिक प्रेस की तुलना में 50% तक कम ऊर्जा खपत प्रदान करता है। ऑटोमोटिव, इलेक्ट्रॉनिक्स और मेडिकल डिवाइस जैसी इंडस्ट्रीज के लिए डिज़ाइन किया गया, सर्वो प्रेस लगातार गुणवत्ता और अधिकतम उत्पादकता सुनिश्चित करता है। अत्याधुनिक डायग्नॉस्टिक्स, उपयोगकर्ता-अनुकूल इंटरफेस और इन-बिल्ट सुरक्षा सुविधाओं से लैस, यह आपके उत्पादन मानकों को फिर से परिभाषित करने का सही समाधान है। आज ही भविष्य के निर्माण के लिए अपग्रेड करें – सटीकता का अनुभव करें, सर्वो प्रेस का अनुभव करें। डेमो के लिए अभी संपर्क करें और अपने प्रोडक्शन लाइन को ऊंचाई दें!',
+      'es-ES': '',
+      'fr-FR': '',
+      'de-DE': ''
     };
 
     const voiceMappings = {
       'en-US': 'Microsoft Zira - English (United States)',
-/*       'ta-IN': 'Microsoft Pallavi Online (Natural) - Tamil (India)',
- */      'ta-IN':'Microsoft Valluvar Online (Natural) - Tamil (India)',
+      'hi-IN':' Microsoft Madhur Online (Natural) - Hindi (India)',
       'es-ES': 'Microsoft Helena - Spanish (Spain)',
       'fr-FR': 'Microsoft Hortense - French (France)',
       'de-DE': 'Microsoft Hedda - German (Germany)'
@@ -664,14 +663,14 @@
       // When the speech starts, change the icon to 'speaker-on'
       utterance.onstart = () => {
         isPlaying = true;
-        speakerIcon.src = 'https://raw.githubusercontent.com/Arul11111990/strong_h/main/assets/img/speaker_on.png';
+        speakerIcon.src = 'https://raw.githubusercontent.com/Arul11111990/servo/6cb3fe9a3f0c986676fa2423caae07f344a82588/speaker_on.png';
         speakerIcon.alt = 'Speaker On';
       };
 
       // When the speech ends, change the icon back to 'speaker-off'
       utterance.onend = () => {
         isPlaying = false;
-        speakerIcon.src = 'https://raw.githubusercontent.com/Arul11111990/strong_h/main/assets/img/speaker_off.png';
+        speakerIcon.src = 'https://raw.githubusercontent.com/Arul11111990/servo/6cb3fe9a3f0c986676fa2423caae07f344a82588/speaker_off.png';
         speakerIcon.alt = 'Speaker Off';
       };
 
@@ -682,7 +681,7 @@
     function stopVoiceOver(speakerIcon) {
       window.speechSynthesis.cancel();
       isPlaying = false;
-      speakerIcon.src = 'https://raw.githubusercontent.com/Arul11111990/strong_h/main/assets/img/speaker_off.png';
+      speakerIcon.src = 'https://raw.githubusercontent.com/Arul11111990/servo/6cb3fe9a3f0c986676fa2423caae07f344a82588/speaker_off.png';
       speakerIcon.alt = 'Speaker Off';
     }
 
