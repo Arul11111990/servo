@@ -353,6 +353,19 @@
   </div>
 
   <div class="content">
+    <div style="position: absolute; top: 10px; left: 10px; z-index: 1000;">
+    <label for="modelDropdown">Select Model:</label>
+    <select id="modelDropdown">
+      <option value=""https://raw.githubusercontent.com/Arul11111990/servo/708a5fd3078534b7701f969afb4963e9c6802b56/servo_press7.glb"">
+        Model 1
+      </option>
+      <option value="https://raw.githubusercontent.com/Arul11111990/servo/708a5fd3078534b7701f969afb4963e9c6802b56/servo_press3.glb">Model 2</option>
+      <option value="https://raw.githubusercontent.com/Arul11111990/servo/708a5fd3078534b7701f969afb4963e9c6802b56/servo_press4.glb">Model 3</option>
+      <option value=""https://raw.githubusercontent.com/Arul11111990/servo/708a5fd3078534b7701f969afb4963e9c6802b56/servo_press2.glb"">Model 4</option>
+      <option value=""https://raw.githubusercontent.com/Arul11111990/servo/708a5fd3078534b7701f969afb4963e9c6802b56/servo_press5.glb"">Model 5</option>
+    </select>
+    </div>
+  
   <model-viewer id="modelViewer" autoplay ar ar-modes="webxr" scale="1 1 1" ar-scale="auto"
     camera-orbit="-30deg auto auto" max-camera-orbit="auto 100deg auto" shadow-intensity="1" camera-controls
     touch-action="pan-y"
@@ -360,12 +373,7 @@
     alt="A 3D model of a tool cart">
   </model-viewer>
 
-  <div id="buttonContainer">
-    <button class="load-button" data-src="https://raw.githubusercontent.com/Arul11111990/servo/65396c64c8984e1068f68765962fbd86ebf6b601/servo_press6.glb">Load Model 1</button>
-    <button class="load-button" data-src="https://raw.githubusercontent.com/Arul11111990/servo/708a5fd3078534b7701f969afb4963e9c6802b56/servo_press4.glb">Load Model 2</button>
-    <button class="load-button" data-src="https://raw.githubusercontent.com/Arul11111990/servo/89f3c9ac7348e0bf42bf7cf197e51c6ab958e608/servo_press7.glb">Load Model 3</button>
-    <button class="load-button" data-src="https://raw.githubusercontent.com/Arul11111990/servo/65396c64c8984e1068f68765962fbd86ebf6b601/servo_press1">Load Model 4</button>
-  </div>
+  
 
   <button class="ar-button" id="arButton">AR View</button>
 </div>
