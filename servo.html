@@ -378,20 +378,18 @@
   <button class="ar-button" id="arButton">AR View</button>
 </div>
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
+ document.addEventListener('DOMContentLoaded', () => {
   const modelViewer = document.getElementById('modelViewer');
-  const buttons = document.querySelectorAll('.load-button');
+  const modelDropdown = document.getElementById('modelDropdown');
 
-  // Load default model
-  const defaultModelSrc = buttons[0].getAttribute('data-src');
+  // Load the default model
+  const defaultModelSrc = modelDropdown.value;
   modelViewer.setAttribute('src', defaultModelSrc);
 
-  // Add event listeners to buttons
-  buttons.forEach(button => {
-    button.addEventListener('click', () => {
-      const modelSrc = button.getAttribute('data-src');
-      modelViewer.setAttribute('src', modelSrc);
-    });
+  // Add event listener for dropdown change
+  modelDropdown.addEventListener('change', (event) => {
+    const selectedModelSrc = event.target.value;
+    modelViewer.setAttribute('src', selectedModelSrc);
   });
 });
 
