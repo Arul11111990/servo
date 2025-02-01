@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Model WebAR</title>
+    <style>
+        body { margin: 0; overflow: hidden; }
+        canvas { display: block; }
+        #model-list, #load-button, #enter-ar {
+            position: absolute; 
+            top: 10px; left: 50%;
+            transform: translateX(-50%);
+            background: white; 
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        #model-list { top: 50px; }
+        #enter-ar { top: 90px; }
+    </style>
+</head>
+<body>
+    <select id="model-list" multiple size="5">
+        <option value="2">Model 2</option>
+        <option value="3">Model 3</option>
+        <option value="4">Model 4</option>
+        <option value="5">Model 5</option>
+    </select>
+    <button id="load-button">Load Models</button>
+    <button id="enter-ar">Enter AR</button>
+
+    <script type="module">
+        import * as THREE from 'https://cdn.jsdelivr.net/npm/three@latest/build/three.module.js';
+        import { ARButton } from 'https://cdn.jsdelivr.net/npm/three@latest/examples/jsm/webxr/ARButton.js';
+        import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@latest/examples/jsm/loaders/GLTFLoader.js';
+
+        let scene, camera, renderer;
+        let models = [];
+        const baseURL = "https://raw.githubusercontent.com/Arul11111990/servo/708a5fd3078534b7701f969afb4963e9c6802b56/servo_press";
+
+        function init() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100);
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.xr.enabled = true;
+            document.body.appendChild(renderer.domElement);
+
+            // Add AR Button
+            document.getElementById("enter-ar").addEventListener("click", () => {
+                document.body.appendChild(ARButton.createButton(renderer));
+            });
+
+            animate();
+        }
+
+        function loadSelectedModels() {
+            // Remove existing models from the scene
+            models.forEach(model => scene.remove(model));
+            models = [];
+
+            // Get selected models
+            const selectedValues = Array.from(document.getElementById("model-list").selectedOptions)
+                                        .map(opt => opt.value);
+
+            const loader = new GLTFLoader();
+            selectedValues.forEach((num, index) => {
+                let modelURL = `${baseURL}${num}.glb`;
+                loader.load(modelURL, (gltf) => {
+                    let model = gltf.scene;
+                    model.position.set(index * 1.5, 0, -2); // Spread out models
+                    model.scale.set(0.5, 0.5, 0.5); // Scale down if needed
+                    scene.add(model);
+                    models.push(model);
+                });
+            });
+        }
+
+        function animate() {
+            renderer.setAnimationLoop(() => {
+                renderer.render(scene, camera);
+            });
+        }
+
+        document.getElementById("load-button").addEventListener("click", loadSelectedModels);
+
+        window.addEventListener("resize", () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        init();
+    </script>
+</body>
+</html>
