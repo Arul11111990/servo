@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="module" src="https://unpkg.com/@google/model-viewer"></script>
+    <title>Multiple GLB in One WebAR Scene</title>
+    <style>
+        model-viewer {
+            width: 100%;
+            height: 500px;
+            display: block;
+            margin: 10px auto;
+        }
+        #enter-ar-button {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Multiple GLB Models in One WebAR Scene</h2>
+
+    <model-viewer id="ar-scene" ar ar-modes="webxr scene-viewer quick-look"
+                  camera-controls auto-rotate>
+    </model-viewer>
+
+    <button id="enter-ar-button">Enter AR Mode</button>
+
+    <script>
+        const modelViewer = document.getElementById("ar-scene");
+        const enterArButton = document.getElementById("enter-ar-button");
+
+        const baseURL = "https://raw.githubusercontent.com/Arul11111990/servo/708a5fd3078534b7701f969afb4963e9c6802b56/servo_press";
+        const fileNumbers = [2, 3, 4, 5];
+
+        // Function to load models
+        async function loadModels() {
+            for (const num of fileNumbers) {
+                const modelURL = `${baseURL}${num}.glb`;
+                const gltf = await fetch(modelURL).then(res => res.blob());
+                const objectURL = URL.createObjectURL(gltf);
+
+                const newModel = document.createElement("model-viewer");
+                newModel.setAttribute("src", objectURL);
+                newModel.setAttribute("position", `${(num - 3) * 0.5} 0 0`); // Adjust positioning if needed
+                newModel.setAttribute("scale", "0.5 0.5 0.5"); // Scaling down for better view
+                newModel.setAttribute("rotation", "0 180 0"); // Rotate if needed
+                modelViewer.appendChild(newModel);
+            }
+        }
+
+        // Event listener for AR button
+        enterArButton.addEventListener('click', () => {
+            modelViewer.activateAR();
+        });
+
+        loadModels();
+    </script>
+</body>
+</html>
