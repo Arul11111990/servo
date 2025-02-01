@@ -1,21 +1,50 @@
-<model-viewer id="scene" ar ar-modes="webxr scene-viewer quick-look" camera-controls auto-rotate>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="module" src="https://unpkg.com/@google/model-viewer"></script>
+    <title>Multiple GLB in One WebAR Scene</title>
+    <style>
+        model-viewer {
+            width: 100%;
+            height: 500px;
+            display: block;
+            margin: 10px auto;
+        }
+    </style>
+</head>
+<body>
+    <h2>Multiple GLB Models in One WebAR Scene</h2>
+
+    <model-viewer id="ar-scene" ar ar-modes="webxr scene-viewer quick-look"
+                  camera-controls auto-rotate>
     </model-viewer>
 
     <script>
-      async function loadMultipleGLB() {
-        const modelViewer = document.getElementById('scene');
-        const models = ['model1.glb', 'model2.glb', 'model3.glb']; // Add your file paths
+        const modelViewer = document.getElementById("ar-scene");
+        const baseURL = "https://raw.githubusercontent.com/Arul11111990/servo/708a5fd3078534b7701f969afb4963e9c6802b56/servo_press";
+        const fileNumbers = [2, 3, 4, 5]; // Dynamic file selection
 
-        for (const model of models) {
-          const gltf = await fetch(model).then(res => res.arrayBuffer());
-          const objectURL = URL.createObjectURL(new Blob([gltf]));
-          const newModel = document.createElement("model-viewer");
-          newModel.setAttribute("src", objectURL);
-          newModel.setAttribute("ar", "");
-          newModel.setAttribute("camera-controls", "");
-          document.body.appendChild(newModel);
+        async function loadModels() {
+            for (const num of fileNumbers) {
+                let modelURL = `${baseURL}${num}.glb`;
+
+                let gltf = await fetch(modelURL).then(res => res.blob());
+                let objectURL = URL.createObjectURL(gltf);
+
+                let newModel = document.createElement("model-viewer");
+                newModel.setAttribute("src", objectURL);
+                newModel.setAttribute("position", `${(num - 3) * 0.5} 0 0`); // Positioning each model
+                newModel.setAttribute("ar", "");
+                newModel.setAttribute("camera-controls", "");
+                newModel.setAttribute("auto-rotate", "");
+                
+                modelViewer.appendChild(newModel);
+            }
         }
-      }
 
-      loadMultipleGLB();
+        loadModels();
     </script>
+</body>
+</html>
