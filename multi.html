@@ -1,0 +1,21 @@
+<model-viewer id="scene" ar ar-modes="webxr scene-viewer quick-look" camera-controls auto-rotate>
+    </model-viewer>
+
+    <script>
+      async function loadMultipleGLB() {
+        const modelViewer = document.getElementById('scene');
+        const models = ['model1.glb', 'model2.glb', 'model3.glb']; // Add your file paths
+
+        for (const model of models) {
+          const gltf = await fetch(model).then(res => res.arrayBuffer());
+          const objectURL = URL.createObjectURL(new Blob([gltf]));
+          const newModel = document.createElement("model-viewer");
+          newModel.setAttribute("src", objectURL);
+          newModel.setAttribute("ar", "");
+          newModel.setAttribute("camera-controls", "");
+          document.body.appendChild(newModel);
+        }
+      }
+
+      loadMultipleGLB();
+    </script>
